@@ -67,14 +67,13 @@ public:
 	std::string* getToks();
 	std::string getTok_Comment();
 	bool canRead();
-
+	int getLineToker();
 	void setSpecialSingleChars(string specialChars);
 	void setSpecialCharPairs(string specialChars);
 private:
 
 	ConsumeState* pConsumer;
 };
-
 
 }
 

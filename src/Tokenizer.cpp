@@ -7,7 +7,6 @@
 //              rmalapat@syr.edu                              //
 /////////////////////////////////////////////////////////////////////
 
-
 #include "Tokenizer.h"
 #include <iostream>
 #include <cctype>
@@ -18,6 +17,7 @@
 #include <fstream>
 //#define TEST_TOKENIZER
 //#define TEST_LOG
+//#define TEST_PROJECT1
 namespace Scanner
 {
 class VecHolder
@@ -56,6 +56,7 @@ private:
 	vector<string> specCharPair;
 	vector<string> specCharSing;
 };
+
 class ConsumeState
 {
 public:
@@ -112,11 +113,15 @@ public:
 		_pVecHolder->setSpecialChar(specialChars);
 
 	}
+	int getLine()
+	{
+		return _line_count;
+	}
 
 private:
 
 protected:
-
+	static int _line_count;
 	static std::string tokens[2];
 	static std::string token;
 	static std::string token_contents;
@@ -134,48 +139,12 @@ protected:
 	static ConsumeState* _pEatPunctuatorExpansion;
 };
 
-
-
-
 }
-#ifdef TEST_TOKENIZER
 
-int main()
-{
-//getTok_comment();
-	std::cout << "Done";
-//std::string fileSpec = "/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
-	std::string fileSpec =
-	"/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
-//std::string fileSpec = "../Tokenizer/Test.txt";
-
-	std::ifstream in(fileSpec);
-//std::cout << in.rdbuf();
-	if (!in.good())
-	{
-		std::cout << "\n  can't open " << fileSpec << "\n\n";
-		return 1;
-	}
-	Toker toker;
-	toker.attach(&in);
-	std::ofstream myfile;
-
-	while (in.good())
-	{
-
-		std::string* toks = toker.getToks();
-		std::cout << "\n-----------------------------------------" << toks[1];
-		std::cout << "\n" << toks[0];
-		std::cout << "\n-----------------------------------------" << toks[1];
-	}
-	std::cout << "\n\n";
-	return 0;
-}
-#endif
-
-#ifndef TEST_TOKENIZER
+//#ifndef TEST_TOKENIZER
 using namespace std;
 using namespace Scanner;
+int ConsumeState::_line_count = 0;
 std::string ConsumeState::tokens[2];
 std::string ConsumeState::token;
 std::string ConsumeState::token_contents;
@@ -363,7 +332,7 @@ public:
 					token += currChar;
 				if (currChar == '\'' && prevChar == '\\')
 				{
-					token += currChar;
+					//token += currChar;
 					prevChar = currChar;
 					currChar = _pIn->get();
 				}
@@ -387,7 +356,7 @@ public:
 					token += currChar;
 				if (currChar == '"' && prevChar == '\\')
 				{
-					token += currChar;
+					//token += currChar;
 					prevChar = currChar;
 					currChar = _pIn->get();
 				}
@@ -472,6 +441,7 @@ public:
 		tokens[1] = token_contents;
 		token += currChar;
 		tokens[0] = token;
+		_line_count++;
 		//tp.token_s = token;
 		if (!_pIn->good())  // end of stream
 			return;
@@ -497,6 +467,7 @@ ConsumeState::ConsumeState()
 		_pEatPunctuatorExpansion = new PunctuatorExpansion();
 		VecHolder* vec = new VecHolder();
 		_pVecHolder = vec;
+		_line_count = 1;
 
 	}
 }
@@ -513,6 +484,7 @@ ConsumeState::~ConsumeState()
 		delete _pEatPunctuator;
 		delete _pEatWhitespace;
 		delete _pEatNewline;
+		delete _pVecHolder;
 	}
 }
 
@@ -583,6 +555,10 @@ bool Toker::canRead()
 	return pConsumer->canRead();
 }
 
+int Toker::getLineToker()
+{
+	return pConsumer->getLine();
+}
 void testLog(const std::string& msg)
 {
 #ifdef TEST_LOG
@@ -590,69 +566,6 @@ void testLog(const std::string& msg)
 #endif
 }
 
-int getTok_block()
-{
-	std::string tok_temp;
-
-	std::string fileSpec1 =
-			"/home/malz/workspace/new_workspace/\" Tokenizer/src/Tokenizer.cpp";
-
-	std::ifstream ifs(fileSpec1);
-
-	if (!ifs.good())
-	{
-		std::cout << "\n  can't open " << fileSpec1 << "\n\n";
-		return 1;
-	}
-	Toker toker_comment;
-	toker_comment.attach(&ifs);
-	std::string result = "";
-	while (ifs.good())
-	{
-
-		std::string tok = toker_comment.getTok();
-		if (tok == "{")
-		{
-
-			tok_temp =
-					"\n----------------------------------------------------Block_start------------------------------ \n";
-			std::cout << "\n" << tok_temp;
-		}
-		else if (tok == "}")
-		{
-			std::cout << "\n" << result;
-			result.clear();
-			tok_temp =
-					"\n----------------------------------------------------Block_stop-------------------------------- \n";
-			std::cout << "\n" << tok_temp;
-		}
-		else
-		{
-			result += tok;
-
-		}
-
-	}
-	return 1;
-
-}
-
-int getTok_comment()
-{
-	std::string fileSpec1 =
-			"/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
-
-	std::ifstream ifs(fileSpec1);
-
-	if (!ifs.good())
-	{
-		std::cout << "\n  can't open " << fileSpec1 << "\n\n";
-		return 1;
-	}
-	Toker toker_comment;
-	toker_comment.attach(&ifs);
-	return 0;
-}
 
 void Toker::setSpecialSingleChars(string specialChars)
 {
@@ -662,20 +575,20 @@ void Toker::setSpecialCharPairs(string specialChars)
 {
 	pConsumer->setSpecialPair(specialChars);
 }
-
+//#endif
 //----< test stub >--------------------------------------------------
-
+#ifdef TEST_PROJECT1
 int main()
 {
 	cout
-			<< "----------------Requirement1 and Requirment2----------------------------\n";
+	<< "----------------Requirement1 and Requirment2----------------------------\n";
 	cout << "Using Visual Studio and Standard C++ I/O Library \n";
 	cout << "----------------Requirement3----------------------------\n";
 	cout
-			<< "Providing Tokenizing, SemiExpression Package and Scanner interface \n";
+	<< "Providing Tokenizing, SemiExpression Package and Scanner interface \n";
 
 	std::string fileSpec =
-			"/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
+	"/home/malz/workspace/new_workspace/testtok.cpp";
 
 	std::ifstream in(fileSpec);
 	if (!in.good())
@@ -713,7 +626,7 @@ int main()
 	toker.setSpecialSingleChars("-");
 	toker.setSpecialSingleChars("*");
 	toker.setSpecialSingleChars("\n");
-	toker.setSpecialSingleChars("#");
+	//toker.setSpecialSingleChars("#");
 
 	while (in.good())
 	{
@@ -721,10 +634,45 @@ int main()
 		std::string* toks = toker.getToks();
 		std::cout << "\n---------------" << toks[1];
 		std::cout << "\n" << toks[0];
+		std::cout<<"\n the line number is :"<<toker.getLineToker();
 		//std::cout << "\n-----------------------------------------" << toks[1];
 	}
 	std::cout << "\n\n";
 	return 0;
 }
 
+#endif
+#ifdef TEST_TOKENIZER
+
+int main()
+{
+//getTok_comment();
+	std::cout << "Done";
+//std::string fileSpec = "/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
+	std::string fileSpec =
+	"/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
+//std::string fileSpec = "../Tokenizer/Test.txt";
+
+	std::ifstream in(fileSpec);
+//std::cout << in.rdbuf();
+	if (!in.good())
+	{
+		std::cout << "\n  can't open " << fileSpec << "\n\n";
+		return 1;
+	}
+	Toker toker;
+	toker.attach(&in);
+	std::ofstream myfile;
+
+	while (in.good())
+	{
+
+		std::string* toks = toker.getToks();
+		std::cout << "\n-----------------------------------------" << toks[1];
+		std::cout << "\n" << toks[0];
+		std::cout << "\n-----------------------------------------" << toks[1];
+	}
+	std::cout << "\n\n";
+	return 0;
+}
 #endif
