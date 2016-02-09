@@ -51,10 +51,20 @@ public:
 	{
 		specCharSing.push_back(specialChars);
 	}
+	void setTokenTypeReq(string tokenType)
+	{
+		list_TokenTypesRequired.push_back(tokenType);
+
+	}
+	vector<string> getTokenTypeReq()
+	{
+		return list_TokenTypesRequired;
+	}
 private:
 
 	vector<string> specCharPair;
 	vector<string> specCharSing;
+	vector<string> list_TokenTypesRequired;
 };
 
 class ConsumeState
@@ -113,6 +123,14 @@ public:
 		_pVecHolder->setSpecialChar(specialChars);
 
 	}
+	void setTokenTypesFlag(string tokenTypes)
+	{
+		_pVecHolder->setTokenTypeReq(tokenTypes);
+	}
+	vector<string> getTokenTypesFlag()
+	{
+		return _pVecHolder->getTokenTypeReq();
+	}
 	int getLine()
 	{
 		return _line_count;
@@ -137,6 +155,18 @@ protected:
 	static ConsumeState* _pEatAlphanum;
 	static ConsumeState* _pEatNewline;
 	static ConsumeState* _pEatPunctuatorExpansion;
+	static bool whiteSpaceFlg;
+	static bool cppCommeFlag;
+	static bool cCommeFlag;
+	static bool puncCommenFlag;
+	static bool puncSecondflag;
+	static bool characSingleQuoteFlag;
+	static bool charDoubleQuoteFlag;
+	static bool charStringFlag;
+	static bool specialSinglFlag;
+	static bool specialPairFlag;
+	static bool alphaNumFlag;
+	static bool newLineflag;
 };
 
 }
@@ -160,6 +190,18 @@ ConsumeState* ConsumeState::_pEatPunctuator = nullptr;
 ConsumeState* ConsumeState::_pEatAlphanum = nullptr;
 ConsumeState* ConsumeState::_pEatNewline;
 ConsumeState* ConsumeState::_pEatPunctuatorExpansion = nullptr;
+bool ConsumeState::whiteSpaceFlg = false;
+bool ConsumeState::cppCommeFlag = false;
+bool ConsumeState::cCommeFlag = false;
+bool ConsumeState::puncCommenFlag = false;
+bool ConsumeState::puncSecondflag = false;
+bool ConsumeState::characSingleQuoteFlag = false;
+bool ConsumeState::charDoubleQuoteFlag = false;
+bool ConsumeState::charStringFlag = false;
+bool ConsumeState::specialSinglFlag = false;
+bool ConsumeState::specialPairFlag = false;
+bool ConsumeState::alphaNumFlag = false;
+bool ConsumeState::newLineflag = false;
 
 void testLog(const std::string& msg);
 
@@ -340,7 +382,7 @@ public:
 
 			currChar = _pIn->peek();
 			tokens[0] = token;
-			tokens[1] = "character string-Req4.6";
+			tokens[1] = "character_single_quote_string_Req4.6";
 			return;
 		}
 		if (currChar == '"')
@@ -365,7 +407,7 @@ public:
 
 			currChar = _pIn->peek();
 			tokens[0] = token;
-			tokens[1] = "character string-Req4.6";
+			tokens[1] = "character_double_quote_string_Req4.6";
 			return;
 		}
 
@@ -378,7 +420,7 @@ public:
 				token += currChar;
 				tokens[0] = token;
 				currChar = _pIn->get();
-				tokens[1] = "Special two characters-Req4.3";
+				tokens[1] = "Special_two_characters_Req4.3";
 				return;
 			}
 		}
@@ -389,7 +431,7 @@ public:
 				token += currChar;
 				tokens[0] = token;
 				currChar = _pIn->get();
-				tokens[1] = "Special Single character-Req4.3";
+				tokens[1] = "Special_Single_character_Req4.3";
 				return;
 			}
 		}
@@ -413,7 +455,7 @@ public:
 		tokens[0].clear();
 		tokens[1].clear();
 
-		token_contents = "Alphanum-Req4";
+		token_contents = "Alphanum_Req4";
 		tokens[1] = token_contents;
 
 		do
@@ -566,7 +608,6 @@ void testLog(const std::string& msg)
 #endif
 }
 
-
 void Toker::setSpecialSingleChars(string specialChars)
 {
 	pConsumer->setSpecialChar(specialChars);
@@ -575,20 +616,27 @@ void Toker::setSpecialCharPairs(string specialChars)
 {
 	pConsumer->setSpecialPair(specialChars);
 }
+void Toker::setTokenTypesFlag(string specialChars)
+{
+	pConsumer->setTokenTypesFlag(specialChars);
+}
+vector<string> Toker::getTokenTypesFlag()
+{
+	return pConsumer->getTokenTypesFlag();
+}
 //#endif
 //----< test stub >--------------------------------------------------
 #ifdef TEST_PROJECT1
 int main()
 {
 	cout
-	<< "----------------Requirement1 and Requirment2----------------------------\n";
+			<< "----------------Requirement1 and Requirment2----------------------------\n";
 	cout << "Using Visual Studio and Standard C++ I/O Library \n";
 	cout << "----------------Requirement3----------------------------\n";
 	cout
-	<< "Providing Tokenizing, SemiExpression Package and Scanner interface \n";
+			<< "Providing Tokenizing, SemiExpression Package and Scanner interface \n";
 
-	std::string fileSpec =
-	"/home/malz/workspace/new_workspace/testtok.cpp";
+	std::string fileSpec = "/home/malz/workspace/new_workspace/testtok.cpp";
 
 	std::ifstream in(fileSpec);
 	if (!in.good())
@@ -626,15 +674,32 @@ int main()
 	toker.setSpecialSingleChars("-");
 	toker.setSpecialSingleChars("*");
 	toker.setSpecialSingleChars("\n");
-	//toker.setSpecialSingleChars("#");
+//toker.setSpecialSingleChars("#");
+	toker.setTokenTypesFlag("white_spaces");
+	toker.setTokenTypesFlag("CppComment-Req4.5");
+	toker.setTokenTypesFlag("C Comment-Req4.4");
+	toker.setTokenTypesFlag("Punctuator-Req4");
+	toker.setTokenTypesFlag("Punctuator-Req-4.2");
+	toker.setTokenTypesFlag("character_single_quote_string_Req4.6");
+	toker.setTokenTypesFlag("character string-Req4.6");
+	toker.setTokenTypesFlag("character_double_quote_string_Req4.6");
+	toker.setTokenTypesFlag("Special_two_characters_Req4.3");
+	toker.setTokenTypesFlag("Special_Single_character_Req4.3");
+	toker.setTokenTypesFlag("Alphanum_Req4");
+	toker.setTokenTypesFlag("NewLine");
 
 	while (in.good())
 	{
 
 		std::string* toks = toker.getToks();
-		std::cout << "\n---------------" << toks[1];
-		std::cout << "\n" << toks[0];
-		std::cout<<"\n the line number is :"<<toker.getLineToker();
+		//for(int i=0;i<toker.getTokenTypesFlag().size();i++)
+		//std::cout << "\n---------------" << toks[1];
+		if(toks[1]!="NewLine")
+		{
+			std::cout << "\n" << toks[0];
+		}
+
+		//std::cout << "\n the line number is :" << toker.getLineToker();
 		//std::cout << "\n-----------------------------------------" << toks[1];
 	}
 	std::cout << "\n\n";

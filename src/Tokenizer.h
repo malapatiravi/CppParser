@@ -50,7 +50,7 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-
+#include "ITokCollection.h"
 using namespace std;
 
 namespace Scanner
@@ -70,6 +70,8 @@ public:
 	int getLineToker();
 	void setSpecialSingleChars(string specialChars);
 	void setSpecialCharPairs(string specialChars);
+	void setTokenTypesFlag(string tokenTypes);
+	vector<string> getTokenTypesFlag();
 private:
 
 	ConsumeState* pConsumer;
