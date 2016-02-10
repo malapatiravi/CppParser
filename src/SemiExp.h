@@ -103,12 +103,10 @@
 #include <vector>
 #include "Tokenizer.h"
 #include "ITokCollection.h"
-namespace Scanner
-{
+namespace Scanner {
 using Token = std::string;
 
-class SemiExp: ITokCollection
-{
+class SemiExp: ITokCollection {
 public:
 	SemiExp(Toker* pToker = nullptr);
 	SemiExp(const SemiExp&) = delete;
@@ -118,8 +116,6 @@ public:
 	size_t length();
 	void show();
 	int getLineSemi();
-
-
 
 	std::string& operator[](int n);
 	size_t find(const std::string& tok);

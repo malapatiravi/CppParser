@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Tokenizer.cpp - read words from a std::stream                   //
-// ver 3.2                                                         //
+// ver 3.3                                                         //
 // Language:    Eclipse Mars                            //
 // Application: Parser component, CSE687 - Object Oriented Design  //
 // Author:       Ravichandra Malapati, Syracuse University, CST 4-174        //
@@ -18,46 +18,36 @@
 //#define TEST_TOKENIZER
 //#define TEST_LOG
 //#define TEST_PROJECT1
-namespace Scanner
-{
-class VecHolder
-{
+namespace Scanner {
+class VecHolder {
 public:
-	void displayVector()
-	{
+	void displayVector() {
 		vector<string> tempVec = getSpecialPair();
-		for (int i = 0; i < tempVec.size(); i++)
-		{
+		for (int i = 0; i < tempVec.size(); i++) {
 			if (i == 0)
 				cout << "---------------------------------size of vector is: "
 						<< tempVec.size();
 			cout << "\n Test Vector is: " << tempVec[i];
 		}
 	}
-	vector<string> getSpecialPair()
-	{
+	vector<string> getSpecialPair() {
 		return specCharPair;
 	}
-	void setSpecialPair(string specialChars)
-	{
+	void setSpecialPair(string specialChars) {
 		specCharPair.push_back(specialChars);
 
 	}
-	vector<string> getSpecialChar()
-	{
+	vector<string> getSpecialChar() {
 		return specCharSing;
 	}
-	void setSpecialChar(string specialChars)
-	{
+	void setSpecialChar(string specialChars) {
 		specCharSing.push_back(specialChars);
 	}
-	void setTokenTypeReq(string tokenType)
-	{
+	void setTokenTypeReq(string tokenType) {
 		list_TokenTypesRequired.push_back(tokenType);
 
 	}
-	vector<string> getTokenTypeReq()
-	{
+	vector<string> getTokenTypeReq() {
 		return list_TokenTypesRequired;
 	}
 private:
@@ -67,78 +57,68 @@ private:
 	vector<string> list_TokenTypesRequired;
 };
 
-class ConsumeState
-{
+class ConsumeState {
 public:
 	ConsumeState();
 	ConsumeState(const ConsumeState&) = delete;
 	ConsumeState& operator=(const ConsumeState&) = delete;
 	virtual ~ConsumeState();
-	void attach(std::istream* pIn)
-	{
+	void attach(std::istream* pIn) {
 		_pIn = pIn;
 	}
 	virtual void eatChars() = 0;
-	void consumeChars()
-	{
+	void consumeChars() {
 		_pState->eatChars();
 		_pState = nextState();
 	}
-	bool canRead()
-	{
+	bool canRead() {
 		return _pIn->good();
 	}
-	std::string getTok()
-	{
+	std::string getTok() {
 		return token;
 	}
-	std::string* getToks()
-	{
+	std::string* getToks() {
 		return tokens;
 	}
-	bool hasTok()
-	{
+	bool hasTok() {
 		return token.size() > 0;
 	}
 	ConsumeState* nextState();
-	void displayVector()
-	{
+	void displayVector() {
 		_pVecHolder->displayVector();
 	}
 
-	vector<string> getSpecialPair()
-	{
+	vector<string> getSpecialPair() {
 		return _pVecHolder->getSpecialPair();
 	}
-	void setSpecialPair(string specialChars)
-	{
+	void setSpecialPair(string specialChars) {
 		_pVecHolder->setSpecialPair(specialChars);
 	}
-	vector<string> getSpecialChar()
-	{
+	vector<string> getSpecialChar() {
 		return _pVecHolder->getSpecialChar();
 	}
-	void setSpecialChar(string specialChars)
-	{
+	void setSpecialChar(string specialChars) {
 		_pVecHolder->setSpecialChar(specialChars);
 
 	}
-	void setTokenTypesFlag(string tokenTypes)
-	{
+	void setTokenTypesFlag(string tokenTypes) {
 		_pVecHolder->setTokenTypeReq(tokenTypes);
 	}
-	vector<string> getTokenTypesFlag()
-	{
+	vector<string> getTokenTypesFlag() {
 		return _pVecHolder->getTokenTypeReq();
 	}
-	int getLine()
-	{
+	int getLine() {
 		return _line_count;
 	}
-
+	static void resetConsumeState() {
+		first = true;
+		second = true;
+	}
 private:
 
 protected:
+	static bool first;
+	static bool second;
 	static int _line_count;
 	static std::string tokens[2];
 	static std::string token;
@@ -202,42 +182,37 @@ bool ConsumeState::specialSinglFlag = false;
 bool ConsumeState::specialPairFlag = false;
 bool ConsumeState::alphaNumFlag = false;
 bool ConsumeState::newLineflag = false;
+bool ConsumeState::first = true;
+bool ConsumeState::second = true;
 
 void testLog(const std::string& msg);
 
-ConsumeState* ConsumeState::nextState()
-{
+ConsumeState* ConsumeState::nextState() {
 	if (!(_pIn->good()))
 		return nullptr;
 
 	int chNext = _pIn->peek();
-	if (std::isspace(currChar) && currChar != '\n')
-	{
+	if (std::isspace(currChar) && currChar != '\n') {
 		testLog("state: eatWhitespace");
 		return _pEatWhitespace;
 	}
-	if (currChar == '/' && chNext == '/')
-	{
+	if (currChar == '/' && chNext == '/') {
 		testLog("state: eatCppComment");
 		return _pEatCppComment;
 	}
-	if (currChar == '/' && chNext == '*')
-	{
+	if (currChar == '/' && chNext == '*') {
 		testLog("state: eatCComment");
 		return _pEatCComment;
 	}
-	if (currChar == '\n')
-	{
+	if (currChar == '\n') {
 		testLog("state: eatNewLine");
 		return _pEatNewline;
 	}
-	if (std::isalnum(currChar) || currChar == '_')
-	{
+	if (std::isalnum(currChar) || currChar == '_') {
 		testLog("state: eatAlphanum");
 		return _pEatAlphanum;
 	}
-	if (ispunct(currChar))
-	{
+	if (ispunct(currChar)) {
 #ifdef TEST_TOKENIZER
 		testLog("state: eatPunctuator");
 		return _pEatPunctuator;
@@ -252,11 +227,9 @@ ConsumeState* ConsumeState::nextState()
 	throw(std::logic_error("invalid type"));
 }
 
-class EatWhitespace: public ConsumeState
-{
+class EatWhitespace: public ConsumeState {
 public:
-	virtual void eatChars()
-	{
+	virtual void eatChars() {
 		token.clear();
 		token_contents.clear();
 		tokens[0].clear();
@@ -264,8 +237,7 @@ public:
 		//tp.token_state.clear();
 		token_contents = "white_spaces";
 		tokens[1] = token_contents;
-		do
-		{
+		do {
 			if (!_pIn->good())
 				return;
 			currChar = _pIn->get();
@@ -275,19 +247,16 @@ public:
 	}
 };
 
-class EatCppComment: public ConsumeState
-{
+class EatCppComment: public ConsumeState {
 public:
-	virtual void eatChars()
-	{
+	virtual void eatChars() {
 		token.clear();
 		token_contents.clear();
 		tokens[0].clear();
 		tokens[1].clear();
 		token_contents = "CppComment-Req4.5";
 		tokens[1] = token_contents;
-		do
-		{
+		do {
 			token += currChar;
 
 			if (!_pIn->good())  // end of stream
@@ -299,19 +268,16 @@ public:
 	}
 };
 
-class EatCComment: public ConsumeState
-{
+class EatCComment: public ConsumeState {
 public:
-	virtual void eatChars()
-	{
+	virtual void eatChars() {
 		token.clear();
 		token_contents.clear();
 		tokens[0].clear();
 		tokens[1].clear();
 		token_contents = "C Comment-Req4.4";
 		tokens[1] = token_contents;
-		do
-		{
+		do {
 			token += currChar;
 			if (!_pIn->good())  // end of stream
 				return;
@@ -324,11 +290,9 @@ public:
 	}
 };
 
-class EatPunctuator: public ConsumeState
-{
+class EatPunctuator: public ConsumeState {
 public:
-	virtual void eatChars()
-	{
+	virtual void eatChars() {
 		token.clear();
 		token_contents.clear();
 		tokens[0].clear();
@@ -336,8 +300,7 @@ public:
 
 		token_contents = "Punctuator-Req4";
 		tokens[1] = token_contents;
-		do
-		{
+		do {
 			token += currChar;
 			if (!_pIn->good())  // end of stream
 				return;
@@ -346,75 +309,31 @@ public:
 		tokens[0] = token;
 	}
 };
-class PunctuatorExpansion: public EatPunctuator
-{
+class PunctuatorExpansion: public EatPunctuator {
 public:
-
-	virtual void eatChars()
-	{
+	virtual void eatChars() {
 		token.clear();
 		token_contents.clear();
 		tokens[0].clear();
 		tokens[1].clear();
-		string tempSpecCharac, tempSpecCharacSing;
 		tempSpecCharac = string() + char(currChar) + char(_pIn->peek());
 		tempSpecCharacSing = string() + char(currChar);
 		token_contents = "Punctuator-Req-4.2";
 		tokens[1] = token_contents;
-		if (currChar == '\'')
-		{
-			do
-			{
-
-				if (!_pIn->good())  // end of stream
-					return;
-				prevChar = currChar;
-				currChar = _pIn->get();
-				if (currChar != '\'')
-					token += currChar;
-				if (currChar == '\'' && prevChar == '\\')
-				{
-					//token += currChar;
-					prevChar = currChar;
-					currChar = _pIn->get();
-				}
-			} while (currChar != '\'');
-
-			currChar = _pIn->peek();
-			tokens[0] = token;
-			tokens[1] = "character_single_quote_string_Req4.6";
+		if (currChar == '\'') {
+			if (!_pIn->good())  // end of stream
+				return;
+			checkSingleQuote();
 			return;
 		}
-		if (currChar == '"')
-		{
-			do
-			{
-
-				if (!_pIn->good())  // end of stream
-					return;
-				prevChar = currChar;
-				currChar = _pIn->get();
-				if (currChar != '"')
-					token += currChar;
-				if (currChar == '"' && prevChar == '\\')
-				{
-					//token += currChar;
-					prevChar = currChar;
-					currChar = _pIn->get();
-				}
-
-			} while (currChar != '"');
-
-			currChar = _pIn->peek();
-			tokens[0] = token;
-			tokens[1] = "character_double_quote_string_Req4.6";
+		if (currChar == '"') {
+			if (!_pIn->good())	return;
+			checkDoubleQuote();
 			return;
 		}
-
 		for (int k = 0; k < _pVecHolder->getSpecialPair().size(); k++) //while (i != specCharPair.end())
-		{
-			if (_pVecHolder->getSpecialPair()[k] == tempSpecCharac)
-			{
+				{
+			if (_pVecHolder->getSpecialPair()[k] == tempSpecCharac) {
 				token += currChar;
 				currChar = _pIn->get();
 				token += currChar;
@@ -425,9 +344,8 @@ public:
 			}
 		}
 		for (int k = 0; k < _pVecHolder->getSpecialChar().size(); k++) //while (i != specCharPair.end())
-		{
-			if (_pVecHolder->getSpecialChar()[k] == tempSpecCharacSing)
-			{
+				{
+			if (_pVecHolder->getSpecialChar()[k] == tempSpecCharacSing) {
 				token += currChar;
 				tokens[0] = token;
 				currChar = _pIn->get();
@@ -435,21 +353,63 @@ public:
 				return;
 			}
 		}
-		do
-		{
+		do {
 			token += currChar;
-			if (!_pIn->good())
-				return;
+			if (!_pIn->good()) 	return;
 			currChar = _pIn->get();
 		} while (ispunct(currChar));
 		tokens[0] = token;
 	}
+
+private:
+	string tempSpecCharac, tempSpecCharacSing;
+	void checkDoubleQuote() {
+		do {
+			if (!_pIn->good())
+				return;
+			prevChar = currChar;
+
+			currChar = _pIn->get();
+			if (currChar == '\\' && _pIn->peek() == '"') {
+				prevChar = currChar;
+				currChar = _pIn->get();
+				token += currChar;
+				currChar = _pIn->get();
+			}
+			if (currChar != '"')
+				token += currChar;
+		} while (currChar != '"');
+		currChar = _pIn->peek();
+		tokens[0] = token;
+		tokens[1] = "character_double_quote_string_Req4.6";
+	}
+
+	void checkSingleQuote() {
+		do {
+			if (!_pIn->good())
+				return;
+			// end of stream
+			prevChar = currChar;
+
+			currChar = _pIn->get();
+			if (currChar == '\\' && prevChar == '\'') {
+				prevChar = currChar;
+				currChar = _pIn->get();
+				token += currChar;
+				currChar = _pIn->get();
+			}
+			if (currChar != '\'')
+				token += currChar;
+		} while (currChar != '\'');
+		currChar = _pIn->peek();
+		tokens[0] = token;
+		tokens[1] = "character_single_quote_string_Req4.6";
+	}
+
 };
-class EatAlphanum: public ConsumeState
-{
+class EatAlphanum: public ConsumeState {
 public:
-	virtual void eatChars()
-	{
+	virtual void eatChars() {
 		token.clear();
 		token_contents.clear();
 		tokens[0].clear();
@@ -458,8 +418,7 @@ public:
 		token_contents = "Alphanum_Req4";
 		tokens[1] = token_contents;
 
-		do
-		{
+		do {
 			token += currChar;
 			if (!_pIn->good())  // end of stream
 				return;
@@ -470,11 +429,9 @@ public:
 	}
 };
 
-class EatNewline: public ConsumeState
-{
+class EatNewline: public ConsumeState {
 public:
-	virtual void eatChars()
-	{
+	virtual void eatChars() {
 		token.clear();
 		token_contents.clear();
 		tokens[0].clear();
@@ -491,11 +448,9 @@ public:
 	}
 };
 
-ConsumeState::ConsumeState()
-{
-	static bool first = true;
-	if (first)
-	{
+ConsumeState::ConsumeState() {
+
+	if (first) {
 		//specChar.clear();
 		//specCharPair.clear();
 		first = false;
@@ -514,12 +469,10 @@ ConsumeState::ConsumeState()
 	}
 }
 
-ConsumeState::~ConsumeState()
-{
-	static bool first = true;
-	if (first)
-	{
-		first = false;
+ConsumeState::~ConsumeState() {
+
+	if (second) {
+		second = false;
 		delete _pEatAlphanum;
 		delete _pEatCComment;
 		delete _pEatCppComment;
@@ -531,19 +484,15 @@ ConsumeState::~ConsumeState()
 }
 
 Toker::Toker() :
-		pConsumer(new EatWhitespace())
-{
+		pConsumer(new EatWhitespace()) {
 }
 
-Toker::~Toker()
-{
+Toker::~Toker() {
 	delete pConsumer;
 }
 
-bool Toker::attach(std::istream* pIn)
-{
-	if (pIn != nullptr && pIn->good())
-	{
+bool Toker::attach(std::istream* pIn) {
+	if (pIn != nullptr && pIn->good()) {
 		pConsumer->attach(pIn);
 		return true;
 	}
@@ -551,11 +500,9 @@ bool Toker::attach(std::istream* pIn)
 
 }
 
-std::string Toker::getTok()
-{
+std::string Toker::getTok() {
 
-	while (true)
-	{
+	while (true) {
 		if (!pConsumer->canRead())
 			return "";
 		pConsumer->consumeChars();
@@ -564,24 +511,19 @@ std::string Toker::getTok()
 	}
 	return pConsumer->getTok();
 }
-std::string* Toker::getToks()
-{
-	while (true)
-	{
+std::string* Toker::getToks() {
+	while (true) {
 		std::string str[] = "";
 		pConsumer->consumeChars();
 		if (pConsumer->hasTok())
 			break;
 		if (!pConsumer->canRead())
 			return str;
-		//std::cout<<" \n the token is" << pConsumer->getTok();
 	}
 	return pConsumer->getToks();
 }
-std::string Toker::getTok_Comment()
-{
-	while (true)
-	{
+std::string Toker::getTok_Comment() {
+	while (true) {
 		pConsumer->consumeChars();
 		if (pConsumer->hasTok())
 			break;
@@ -592,37 +534,33 @@ std::string Toker::getTok_Comment()
 	return pConsumer->getTok();
 }
 
-bool Toker::canRead()
-{
+bool Toker::canRead() {
 	return pConsumer->canRead();
 }
 
-int Toker::getLineToker()
-{
+int Toker::getLineToker() {
 	return pConsumer->getLine();
 }
-void testLog(const std::string& msg)
-{
+void testLog(const std::string& msg) {
 #ifdef TEST_LOG
 	std::cout << "\n  " << msg;
 #endif
 }
 
-void Toker::setSpecialSingleChars(string specialChars)
-{
+void Toker::setSpecialSingleChars(string specialChars) {
 	pConsumer->setSpecialChar(specialChars);
 }
-void Toker::setSpecialCharPairs(string specialChars)
-{
+void Toker::setSpecialCharPairs(string specialChars) {
 	pConsumer->setSpecialPair(specialChars);
 }
-void Toker::setTokenTypesFlag(string specialChars)
-{
+void Toker::setTokenTypesFlag(string specialChars) {
 	pConsumer->setTokenTypesFlag(specialChars);
 }
-vector<string> Toker::getTokenTypesFlag()
-{
+vector<string> Toker::getTokenTypesFlag() {
 	return pConsumer->getTokenTypesFlag();
+}
+void Toker::reSetTokenizer() {
+	ConsumeState::resetConsumeState();
 }
 //#endif
 //----< test stub >--------------------------------------------------
@@ -630,11 +568,11 @@ vector<string> Toker::getTokenTypesFlag()
 int main()
 {
 	cout
-			<< "----------------Requirement1 and Requirment2----------------------------\n";
+	<< "----------------Requirement1 and Requirment2----------------------------\n";
 	cout << "Using Visual Studio and Standard C++ I/O Library \n";
 	cout << "----------------Requirement3----------------------------\n";
 	cout
-			<< "Providing Tokenizing, SemiExpression Package and Scanner interface \n";
+	<< "Providing Tokenizing, SemiExpression Package and Scanner interface \n";
 
 	std::string fileSpec = "/home/malz/workspace/new_workspace/testtok.cpp";
 
@@ -715,7 +653,7 @@ int main()
 	std::cout << "Done";
 //std::string fileSpec = "/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
 	std::string fileSpec =
-	"/home/malz/workspace/new_workspace/Tokenizer/src/Tokenizer.cpp";
+	"/home/malz/workspace/new_workspace/testtok.cpp";
 //std::string fileSpec = "../Tokenizer/Test.txt";
 
 	std::ifstream in(fileSpec);

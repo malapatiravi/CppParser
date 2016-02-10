@@ -13,7 +13,7 @@
 // Author:       Ravichandra Malapati, Syracuse University, CST 4-174        //
 //              rmalapat@syr.edu                              //
 /////////////////////////////////////////////////////////////////////
-#define TEST_SEMI
+//#define TEST_SEMI
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -26,26 +26,15 @@
 using namespace Scanner;
 
 SemiExp::SemiExp(Toker* pToker) :
-		_pToker(pToker)
-{
+		_pToker(pToker) {
 
 }
 
-/*bool SemiExp::get(bool clear = true)
- {
- return 0;
- }*/
-/*size_t SemiExp::length()
- {
- return 0;
- }*/
-std::string& SemiExp::operator[](int n)
-{
+std::string& SemiExp::operator[](int n) {
 	string str = "xyz";
 	return str;
 }
-size_t SemiExp::find(const std::string& tok)
-{
+size_t SemiExp::find(const std::string& tok) {
 	for (size_t i = 0; i < length(); ++i)
 		if (_tokens[i] == tok)
 			return i;
@@ -53,52 +42,42 @@ size_t SemiExp::find(const std::string& tok)
 
 }
 
-void SemiExp::push_back(const std::string& tok)
-{
+void SemiExp::push_back(const std::string& tok) {
 
 }
-bool SemiExp::merge(const std::string& firstTok, const std::string& secondTok)
-{
+bool SemiExp::merge(const std::string& firstTok, const std::string& secondTok) {
 
 }
-bool SemiExp::remove(const std::string& tok)
-{
+bool SemiExp::remove(const std::string& tok) {
 
 }
-bool SemiExp::remove(size_t i)
-{
+bool SemiExp::remove(size_t i) {
 	if (i < 0 || i >= length())
 		return false;
 	std::vector<Token>::iterator iter = _tokens.begin() + i;
 	_tokens.erase(iter);
 	return true;
 }
-void SemiExp::toLower()
-{
+void SemiExp::toLower() {
 
 }
-void SemiExp::trimFront()
-{
-	while (length() > 1)
-	{
+void SemiExp::trimFront() {
+	while (length() > 1) {
 		if (_tokens[0] == "\n")
 			remove(0);
 		else
 			break;
 	}
 }
-void SemiExp::clear()
-{
+void SemiExp::clear() {
 	_tokens.clear();
 
 }
-bool SemiExp::analyse(Token tok)
-{
+bool SemiExp::analyse(Token tok) {
 	if (tok == "{" || tok == "}" || tok == ";")
 		return true;
 
-	if (tok == "\n")
-	{
+	if (tok == "\n") {
 		//trimFront();
 		if (_tokens[0] == "#")
 			return true;
@@ -118,15 +97,13 @@ bool SemiExp::analyse(Token tok)
 	return false;
 }
 
-bool SemiExp::get()
-{
+bool SemiExp::get() {
 	int temp = 0;
 	isFor = false;
 	if (_pToker == nullptr)
 		throw(std::logic_error("no Toker reference"));
 	_tokens.clear();
-	while (true)
-	{
+	while (true) {
 		Token* _tok;
 		_tok = _pToker->getToks();
 		//_tokens.push_back(_tok[0]);
@@ -134,18 +111,30 @@ bool SemiExp::get()
 			_tokens.push_back(_tok[0]);
 		else
 			return true;
-		if(_tok[0]=="")
+		if (_tok[0] == "")
 			break;
 		if (_tok[1] == "CppComment-Req4.5" || _tok[1] == "C Comment-Req4.4")
 			return true;
-		if (_tok[0] == "}")
-			return true;
-		if (_tok[0] == "for")
+
+		if (_tok[0] == "for") {
 			isFor = true;
+			while (_tok[0] != "{")
+
+			{
+				_tok = _pToker->getToks();
+				//_tokens.push_back(_tok[0]);
+				if (_tok[1] != "NewLine")
+					_tokens.push_back(_tok[0]);
+				else
+					return true;
+			}
+			_tokens.push_back(_tok[0]);
+
+		}
+
 		if (_tok[0] == "{" || _tok[0] == "}" || _tok[0] == ";")
 			return true;
-		if (_tok[0] == "\n")
-		{
+		if (_tok[0] == "\n") {
 			if (_tokens[0] == "#")
 				return true;
 			if (_tokens[0] == "\n")
@@ -170,24 +159,22 @@ bool SemiExp::get()
 	return false;
 }
 
-Token SemiExp::operator[](size_t n)
-{
+Token SemiExp::operator[](size_t n) {
 	if (n < 0 || n >= _tokens.size())
 		throw(std::invalid_argument("index out of range"));
 	return _tokens[n];
 }
 
-size_t SemiExp::length()
-{
+size_t SemiExp::length() {
 	return _tokens.size();
 }
 
-void SemiExp::show()
-{
+void SemiExp::show() {
 	std::cout << "\n  ";
 	for (auto token : _tokens)
 		//if (token != "\n")
-			std::cout << token;
+		std::cout << token << " ";
+
 	//std::cout << "\n";
 }
 
@@ -267,8 +254,7 @@ int main()
 }
 #endif
 
-int SemiExp::getLineSemi()
-{
+int SemiExp::getLineSemi() {
 	if (_pToker == nullptr)
 		return 0;
 	return _pToker->getLineToker();

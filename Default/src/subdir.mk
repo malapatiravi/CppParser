@@ -10,6 +10,7 @@ CPP_SRCS += \
 ../src/SemiExp.cpp \
 ../src/Special.cpp \
 ../src/SyntaxAnalysis.cpp \
+../src/TestExec.cpp \
 ../src/Tokenizer.cpp \
 ../src/test.cpp 
 
@@ -20,6 +21,7 @@ OBJS += \
 ./src/SemiExp.o \
 ./src/Special.o \
 ./src/SyntaxAnalysis.o \
+./src/TestExec.o \
 ./src/Tokenizer.o \
 ./src/test.o 
 
@@ -30,6 +32,7 @@ CPP_DEPS += \
 ./src/SemiExp.d \
 ./src/Special.d \
 ./src/SyntaxAnalysis.d \
+./src/TestExec.d \
 ./src/Tokenizer.d \
 ./src/test.d 
 

@@ -53,12 +53,10 @@
 #include "ITokCollection.h"
 using namespace std;
 
-namespace Scanner
-{
+namespace Scanner {
 class ConsumeState;
 class VecHolder;
-class Toker
-{
+class Toker {
 public:
 	Toker();
 	~Toker();
@@ -72,6 +70,7 @@ public:
 	void setSpecialCharPairs(string specialChars);
 	void setTokenTypesFlag(string tokenTypes);
 	vector<string> getTokenTypesFlag();
+	void reSetTokenizer();
 private:
 
 	ConsumeState* pConsumer;
