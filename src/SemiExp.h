@@ -116,7 +116,7 @@ public:
 	size_t length();
 	void show();
 	int getLineSemi();
-
+	bool get1(bool clear);
 	std::string& operator[](int n);
 	size_t find(const std::string& tok);
 	void push_back(const std::string& tok);

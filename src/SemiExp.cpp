@@ -39,11 +39,10 @@ size_t SemiExp::find(const std::string& tok) {
 		if (_tokens[i] == tok)
 			return i;
 	return length();
-
 }
 
 void SemiExp::push_back(const std::string& tok) {
-
+	_tokens.push_back(tok);
 }
 bool SemiExp::merge(const std::string& firstTok, const std::string& secondTok) {
 
@@ -76,27 +75,37 @@ void SemiExp::clear() {
 bool SemiExp::analyse(Token tok) {
 	if (tok == "{" || tok == "}" || tok == ";")
 		return true;
-
 	if (tok == "\n") {
 		//trimFront();
 		if (_tokens[0] == "#")
 			return true;
 	}
-
 	if (length() < 2)
 		return false;
 
 	if (tok == ":" && length() > 0 && _tokens[length() - 2] == "public")
 		return true;
-
 	if (tok == ":" && length() > 0 && _tokens[length() - 2] == "protected")
 		return true;
-
 	if (tok == ":" && length() > 0 && _tokens[length() - 2] == "private")
 		return true;
 	return false;
 }
+bool SemiExp::get1(bool clear1) {
+	if (clear1)
+		clear();
+	if (_pToker == nullptr)
+		throw(std::logic_error("no Toker reference"));
+	while (true) {
+		Token* token = _pToker->getToks();
+		if(token[0]=="")
+			break;
+		push_back(token[0]);
 
+	}
+
+	return true;
+}
 bool SemiExp::get() {
 	int temp = 0;
 	isFor = false;
@@ -105,8 +114,7 @@ bool SemiExp::get() {
 	_tokens.clear();
 	while (true) {
 		Token* _tok;
-		_tok = _pToker->getToks();
-		//_tokens.push_back(_tok[0]);
+		_tok = _pToker->getToks(); //_tokens.push_back(_tok[0]);
 		if (_tok[1] != "NewLine")
 			_tokens.push_back(_tok[0]);
 		else
@@ -115,23 +123,18 @@ bool SemiExp::get() {
 			break;
 		if (_tok[1] == "CppComment-Req4.5" || _tok[1] == "C Comment-Req4.4")
 			return true;
-
 		if (_tok[0] == "for") {
 			isFor = true;
-			while (_tok[0] != "{")
-
-			{
-				_tok = _pToker->getToks();
-				//_tokens.push_back(_tok[0]);
+			while (_tok[0] != "{") {
 				if (_tok[1] != "NewLine")
 					_tokens.push_back(_tok[0]);
 				else
 					return true;
+				_tok = _pToker->getToks(); //_tokens.push_back(_tok[0]);
+
 			}
 			_tokens.push_back(_tok[0]);
-
 		}
-
 		if (_tok[0] == "{" || _tok[0] == "}" || _tok[0] == ";")
 			return true;
 		if (_tok[0] == "\n") {
@@ -142,19 +145,15 @@ bool SemiExp::get() {
 			else
 				break;
 		}
-
 		if (_tok[0] == ":" && length() > 0 && _tokens[length() - 2] == "public")
 			return true;
-
 		if (_tok[0] == ":" && length() > 0
 				&& _tokens[length() - 2] == "protected")
 			return true;
-
 		if (_tok[0] == ":" && length() > 0
 				&& _tokens[length() - 2] == "private")
 			if (_tok[0] == "")
 				break;
-
 	}
 	return false;
 }
@@ -175,9 +174,8 @@ void SemiExp::show() {
 		//if (token != "\n")
 		std::cout << token << " ";
 
-	//std::cout << "\n";
 }
-
+/*---------------Test Stub--------------------*/
 #ifdef TEST_SEMI
 int main()
 {
