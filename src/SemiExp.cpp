@@ -34,7 +34,6 @@ SemiExp::SemiExp(Toker* pToker) :
 /*bool SemiExp::get(bool clear = true)
  {
  return 0;
-
  }*/
 /*size_t SemiExp::length()
  {
@@ -116,9 +115,7 @@ bool SemiExp::analyse(Token tok)
 
 	if (tok == ":" && length() > 0 && _tokens[length() - 2] == "private")
 		return true;
-
 	return false;
-
 }
 
 bool SemiExp::get()
@@ -132,21 +129,15 @@ bool SemiExp::get()
 	{
 		Token* _tok;
 		_tok = _pToker->getToks();
-		if(_tok[1]!="NewLine")
-		_tokens.push_back(_tok[0]);
+		//_tokens.push_back(_tok[0]);
+		if (_tok[1] != "NewLine")
+			_tokens.push_back(_tok[0]);
 		else
 			return true;
-		//cout<<"\n"<<_tok[0];
-		if (_tok[0] == "")
-		 break;
-		if(_tok[1]=="CppComment-Req4.5" || _tok[1]=="C Comment-Req4.4")
+		if(_tok[0]=="")
+			break;
+		if (_tok[1] == "CppComment-Req4.5" || _tok[1] == "C Comment-Req4.4")
 			return true;
-
-		/*if(_tok[1]=="NewLine")
-		{
-				return true;
-		}*/
-
 		if (_tok[0] == "}")
 			return true;
 		if (_tok[0] == "for")
@@ -156,15 +147,12 @@ bool SemiExp::get()
 		if (_tok[0] == "\n")
 		{
 			if (_tokens[0] == "#")
-							return true;
+				return true;
 			if (_tokens[0] == "\n")
 				remove(0);
 			else
 				break;
-
 		}
-	/*	if (length() < 2)
-			return false;*/
 
 		if (_tok[0] == ":" && length() > 0 && _tokens[length() - 2] == "public")
 			return true;
@@ -175,7 +163,9 @@ bool SemiExp::get()
 
 		if (_tok[0] == ":" && length() > 0
 				&& _tokens[length() - 2] == "private")
-			return true;
+			if (_tok[0] == "")
+				break;
+
 	}
 	return false;
 }
@@ -196,9 +186,9 @@ void SemiExp::show()
 {
 	std::cout << "\n  ";
 	for (auto token : _tokens)
-		if (token != "\n")
-			std::cout << token ;
-	std::cout << "\n";
+		//if (token != "\n")
+			std::cout << token;
+	//std::cout << "\n";
 }
 
 #ifdef TEST_SEMI
@@ -267,7 +257,6 @@ int main()
 	 May have collected tokens, but reached end of stream
 	 before finding SemiExp terminator.
 	 */
-
 	if (semi.length() > 0)
 	{
 		std::cout << "\n  -- semiExpression --";
