@@ -72,6 +72,23 @@ void SemiExp::clear() {
 	_tokens.clear();
 
 }
+bool SemiExp::forLoop(Token tok) {
+	//_tokens.push_back(tok);
+	//cout << "\n" << tok;
+	Token* _tok = _pToker->getToks();
+
+	while (_tok[0] != "{") {
+		//cout<<"\n"<<_tok[0];
+		_tokens.push_back(_tok[0]);
+		_tok = _pToker->getToks();
+	}
+	if (_tok[0] == "{")
+		_tokens.push_back(_tok[0]);
+	if (find(";") == 0)
+		return false;
+	return true;
+}
+
 bool SemiExp::analyse(Token tok) {
 	if (tok == "{" || tok == "}" || tok == ";")
 		return true;
@@ -98,10 +115,34 @@ bool SemiExp::get1(bool clear1) {
 		throw(std::logic_error("no Toker reference"));
 	while (true) {
 		Token* token = _pToker->getToks();
-		if(token[0]=="")
+		if (token[0] == "")
 			break;
 		push_back(token[0]);
-
+		if (token[0] == "for") {
+			if (forLoop(token[0]))
+				return true;
+		}
+		if (token[1] == "CppComment-Req4.5" || token[1] == "C Comment-Req4.4")
+			return true;
+		if (token[0] == "{" || token[0] == "}" || token[0] == ";")
+			return true;
+		if (token[0] == "\n") {
+			if (_tokens[0] == "#")
+				return true;
+			if (_tokens[0] == "\n")
+			 remove(0);
+			 else
+			 break;
+		}
+		if (token[0] == ":" && length() > 0
+				&& _tokens[length() - 2] == "public")
+			return true;
+		if (token[0] == ":" && length() > 0
+				&& _tokens[length() - 2] == "protected")
+			return true;
+		if (token[0] == ":" && length() > 0
+				&& _tokens[length() - 2] == "private")
+			return true;
 	}
 
 	return true;
@@ -175,15 +216,31 @@ void SemiExp::show() {
 		std::cout << token << " ";
 
 }
+Token SemiExp::show1(bool showNewLines) {
+	/*Token str="\n";
+
+	 for(int i=0;i<_tokens.size();i++)
+	 {str+=_tokens[i];
+	// cout<<str;
+
+	 }
+
+	 return str;*/
+	Token dispSemiexp = "\n  ";
+	for (int i=0;i<_tokens.size();i++)
+		if (_tokens[i] != "\n" || showNewLines == true)
+			dispSemiexp += _tokens[i] + " ";
+	dispSemiexp += "\n";
+	return dispSemiexp;
+}
+
 /*---------------Test Stub--------------------*/
 #ifdef TEST_SEMI
-int main()
-{
+int main() {
 	Toker toker;
 	std::string fileSpec = "/home/malz/workspace/new_workspace/testtok.cpp";
 	std::fstream in(fileSpec);
-	if (!in.good())
-	{
+	if (!in.good()) {
 		std::cout << "\n  can't open file " << fileSpec << "\n\n";
 		return 1;
 	}
@@ -231,10 +288,9 @@ int main()
 	toker.setTokenTypesFlag("Alphanum_Req4");
 	toker.setTokenTypesFlag("NewLine");
 
-	while (semi.get())
-	{
+	while (semi.get1(true)) {
 		std::cout << "\n  -- semiExpression --";
-		semi.show();
+		cout << semi.show1(true);
 		//cout << "\nLine number is:" << semi.getLineSemi();
 
 	}
@@ -242,10 +298,9 @@ int main()
 	 May have collected tokens, but reached end of stream
 	 before finding SemiExp terminator.
 	 */
-	if (semi.length() > 0)
-	{
+	if (semi.length() > 0) {
 		std::cout << "\n  -- semiExpression --";
-		semi.show();
+		//semi.show();
 		std::cout << "\n\n";
 	}
 	return 0;

@@ -48,7 +48,7 @@ struct ITokCollection
 	virtual void toLower()=0;
 	virtual void trimFront()=0;
 	virtual void clear()=0;
-	//virtual std::string show(bool showNewLines = false)=0;
+	virtual std::string show1(bool showNewLines = false)=0;
 	virtual ~ITokCollection()
 	{
 	}

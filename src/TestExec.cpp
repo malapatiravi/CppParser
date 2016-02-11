@@ -4,7 +4,7 @@
  *  Created on: Feb 9, 2016
  *      Author: malz
  */
-
+#define TESTEXEC
 #include "Tokenizer.h"
 #include "SemiExp.h"
 #include "Tokenizer.h"
@@ -101,9 +101,9 @@ public:
 		toker1.attach(&in1);
 		SemiExp semi(&toker1);
 		tokenizerSetUp(toker1);
-		while (semi.get()) {
+		while (semi.get1(true)) {
 			std::cout << "\n  -- semiExpression --";
-			semi.show();
+			cout<<semi.show1(true);
 		}
 		if (semi.length() > 0) {
 			std::cout << "\n  -- semiExpression --";
@@ -115,8 +115,9 @@ public:
 
 };
 
+#ifdef TESTEXEC
 int main() {
 	TestExec te;
 	te.main1();
 }
-
+#endif

@@ -126,7 +126,8 @@ public:
 	void toLower();
 	void trimFront();
 	void clear();
-	//std::string show(bool showNewLines = false);
+	std::string show1(bool showNewLines = false);
+	bool forLoop(string tok);
 private:
 	bool isFor;
 	std::vector<Token> _tokens;

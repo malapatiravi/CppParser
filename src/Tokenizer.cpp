@@ -437,9 +437,9 @@ public:
 		tokens[0].clear();
 		tokens[1].clear();
 		token_contents = "NewLine";
-		//tokens[1] = token_contents;
-		//token += currChar;
-		//tokens[0] = token;
+		tokens[1] = token_contents;
+		token += currChar;
+		tokens[0] = token;
 		_line_count++;
 		//tp.token_s = token;
 		if (!_pIn->good())  // end of stream
