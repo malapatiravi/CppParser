@@ -4,6 +4,17 @@
  *  Created on: Feb 9, 2016
  *      Author: malz
  */
+
+/////////////////////////////////////////////////////////////////////
+// TestExec.cpp - this package executes all the operations of Tokenizer, ITok collection and SemiExp                  //
+// ver 1.1                                                        //
+// Language:   Visual studio 2015                            //
+// Application: Parser component, CSE687 - Object Oriented Design  //
+// Author:       Ravichandra Malapati, Syracuse University, CST 4-174        //
+//              rmalapat@syr.edu                              //
+/////////////////////////////////////////////////////////////////////
+
+
 #define TESTEXEC
 #include "Tokenizer.h"
 #include "SemiExp.h"
@@ -62,7 +73,7 @@ public:
 		toker.setTokenTypesFlag("Special_two_characters_Req4.3");
 		toker.setTokenTypesFlag("Special_Single_character_Req4.3");
 		toker.setTokenTypesFlag("Alphanum_Req4");
-		toker.setTokenTypesFlag("NewLine");
+		toker.setTokenTypesFlag(" ");
 	}
 	void showInit() {
 		cout << "\n Loading file";
@@ -71,7 +82,6 @@ public:
 
 		showInit();
 		std::ifstream in(fileSpec);
-		cout << "input is: " << in;
 		if (!in.good()) {
 			std::cout << "\n  can't open " << fileSpec << "\n\n";
 		}

@@ -7,7 +7,15 @@
 
 #ifndef SRC_ITOKCOLLECTION_H_
 #define SRC_ITOKCOLLECTION_H_
-
+/////////////////////////////////////////////////////////////////////
+//  ITokCollection.h - package for the ITokCollection interface    //
+//  ver 1.2                                                        //
+//  Language:      Visual C++ 2008, SP1                            //
+//  Platform:      Dell Precision T7400, Vista Ultimate SP1        //
+//  Application:   Prototype for CSE687 Pr1, Sp09                  //
+//  Author:        Ravichandra Malapati, , Syracuse University     //
+//                 (315) 706 3437, rmalapat@twcny.rr.com           //
+/////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 //  ITokCollection.h - package for the ITokCollection interface    //
 //  ver 1.1                                                        //
@@ -28,6 +36,8 @@
 
  Maintenance History:
  ====================
+ ver 1.2 :Feb 10 2016
+ modified few functions as they are already implemented in SemiExp
  ver 1.1 : 02 Jun 11
  - added merge, remove overload, and default param in get
  ver 1.0 : 17 Jan 09

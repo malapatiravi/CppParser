@@ -2,13 +2,14 @@
 #define SEMIEXPRESSION_H
 ///////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
-// Tokenizer.cpp - read words from a std::stream                   //
-// ver 3.2                                                         //
+// SemiExp.h - read words from a std::stream                   //
+// ver 3.3                                                        //
 // Language:    Eclipse Mars                            //
 // Application: Parser component, CSE687 - Object Oriented Design  //
 // Author:       Ravichandra Malapati, Syracuse University, CST 4-174        //
 //              rmalapat@syr.edu                              //
 /////////////////////////////////////////////////////////////////////
+
 /*
  * Package Operations:
  * -------------------

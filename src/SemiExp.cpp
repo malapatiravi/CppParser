@@ -6,13 +6,23 @@
  */
 
 /////////////////////////////////////////////////////////////////////
-// Tokenizer.cpp - read words from a std::stream                   //
+// SemiExp.cpp.cpp - read words from a std::stream                   //
 // ver 3.2                                                         //
 // Language:    Eclipse Mars                            //
 // Application: Parser component, CSE687 - Object Oriented Design  //
 // Author:       Ravichandra Malapati, Syracuse University, CST 4-174        //
 //              rmalapat@syr.edu                              //
 /////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////
+// SemiExpression.cpp - collect tokens for analysis                  //
+// ver 3.1                                                           //
+// Language:    C++, Visual Studio 2015                              //
+// Application: Parser component, CSE687 - Object Oriented Design    //
+// Author:      Jim Fawcett, Syracuse University, CST 4-187          //
+//              jfawcett@twcny.rr.com                                //
+///////////////////////////////////////////////////////////////////////
+
 //#define TEST_SEMI
 #include <fstream>
 #include <iostream>
@@ -45,10 +55,11 @@ void SemiExp::push_back(const std::string& tok) {
 	_tokens.push_back(tok);
 }
 bool SemiExp::merge(const std::string& firstTok, const std::string& secondTok) {
-
+/*this is not required as per the requirment*/
 }
 bool SemiExp::remove(const std::string& tok) {
-
+int l=find(tok);
+return true;
 }
 bool SemiExp::remove(size_t i) {
 	if (i < 0 || i >= length())

@@ -7,6 +7,18 @@
 //              rmalapat@syr.edu                              //
 /////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////
+// Tokenizer.cpp - read words from a std::stream                   //
+// ver 3.2                                                         //
+// Language:    C++, Visual Studio 2015                            //
+// Application: Parser component, CSE687 - Object Oriented Design  //
+// Author:      Jim Fawcett, Syracuse University, CST 4-187        //
+//              jfawcett@twcny.rr.com                              //
+/////////////////////////////////////////////////////////////////////
+/*
+  Helper code that does not attempt to handle all tokenizing
+  special cases like escaped characters.
+*/
 #include "Tokenizer.h"
 #include <iostream>
 #include <cctype>

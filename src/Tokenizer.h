@@ -1,5 +1,6 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
+
 /////////////////////////////////////////////////////////////////////
 // Tokenizer.cpp - read words from a std::stream                   //
 // ver 3.2                                                         //
@@ -8,6 +9,7 @@
 // Author:       Ravichandra Malapati, Syracuse University, CST 4-174        //
 //              rmalapat@syr.edu                              //
 /////////////////////////////////////////////////////////////////////
+
 /*
  * Package Operations:
  * -------------------
